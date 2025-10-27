@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+
+}
+
+body {
+  font-family: 'Bungee', cursive, sans-serif;
+  /* jika kamu ingin background global, pertimbangkan hapus karena App.jsx
+     sudah mengatur background berdasarkan page. Keep a neutral fallback. */
+  background-color: #eaf6ff;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Jurassic World theme colors */
+:root{
+  --jw-forest: #0b6b3a; /* dark green */
+  --jw-moss: #2f8f4e;
+  --jw-earth: #7a5230; /* brown */
+  --jw-gold: #f4c542;
+  --jw-cream: #fff8ec;
+}
+
+/* Button style inspired by provided examples */
+.btn-jw {
+  @apply rounded-2xl px-6 py-3 font-bold shadow-lg inline-flex items-center gap-2;
+  background: linear-gradient(180deg, #fff3d9 0%, #cde5fd 100%);
+  color: #302f2f;
+  border: 3px solid #302f2f;
+  box-shadow: 0 8px 18px rgba(48, 47, 47, 0.25), inset 0 -2px 0 rgba(0,0,0,0.1);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-jw:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(15,40,20,0.22); }
+
+/* card base */
+.card-jw {
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(250,250,240,0.86));
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(6,20,10,0.14);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Egg animation container - make responsive */
+.egg-seq {
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  margin: 0 auto;
+}
+.egg-popup {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  padding:12px;
+  background:var(--jw-cream);
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.16);
+}
+
+/* override for smaller phones */
+@media (max-width: 420px) {
+  .egg-seq { max-width: 130px; }
+  .egg-popup { padding: 10px; gap:6px; }
+}
+
+/* Audio compact (mobile) style */
+.audio-compact {
+  display: inline-block;
+}
+.audio-compact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ffffff, #f2f4f8);
+  border: 2px solid rgba(0,0,0,0.08);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* small adjustments for full audio control */
+.audio-full input[type="range"] {
+  width: 120px;
+}
+
+/* Welcome page button animation (kept) */
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px #fff8ec;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0px #fff8ec;
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 3s infinite;
+}
+
+/* utility: center modal content nicely on small screens */
+.modal-centered {
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 1rem;
+}
+
+/* ensure images won't overflow inside cards */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
