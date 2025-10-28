@@ -1,24 +1,33 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
-// const sequelize = new Sequelize(
-//   process.env.DB_NAME || 'math_game',
-//   process.env.DB_USER || 'mguser',
-//   process.env.DB_PASS || 'mgpass',
-//   {
-//     host: process.env.DB_HOST || 'localhost',
-//     port: process.env.DB_PORT || 3306,
-//     dialect: 'mysql',
-//     logging: false
-//   }
-// );
-
 const path = require("path");
+require("dotenv").config();
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: path.join(process.cwd(), "database.sqlite"),
-  logging: false,
-});
+// =====================
+// DATABASE CONNECTION
+// =====================
+
+// --- Gunakan MySQL dari Railway ---
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: "mysql",
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  }
+);
+
+// =====================
+// MODELS
+// =====================
 
 const Players = sequelize.define(
   "players",
@@ -50,13 +59,12 @@ const Dinos = sequelize.define(
     dino_name: { type: DataTypes.STRING },
     dino_type: { type: DataTypes.STRING },
     image: { type: DataTypes.STRING },
-    // new column: link to Answers if this dino was created from an answer
     answer_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      unique: true, // enforce one-to-one (one answer => at most one dino)
+      unique: true,
       references: {
-        model: "answers", // refers to table name 'answers'
+        model: "answers",
         key: "id",
       },
     },
@@ -85,13 +93,15 @@ const Answers = sequelize.define(
     answer_text: { type: DataTypes.STRING },
     is_correct: { type: DataTypes.BOOLEAN },
     time_spent: { type: DataTypes.INTEGER },
-    // new column: which level this answer belongs to (important for generated questions level 1/2)
     level: { type: DataTypes.INTEGER, allowNull: true },
   },
   { timestamps: true, createdAt: "answered_at", updatedAt: false }
 );
 
-// Associations
+// =====================
+// ASSOCIATIONS
+// =====================
+
 Players.hasMany(Levels, { foreignKey: "player_id" });
 Levels.belongsTo(Players, { foreignKey: "player_id" });
 
@@ -104,10 +114,12 @@ Answers.belongsTo(Players, { foreignKey: "player_id" });
 Questions.hasMany(Answers, { foreignKey: "question_id" });
 Answers.belongsTo(Questions, { foreignKey: "question_id" });
 
-// New association: one Answer may have one Dino (the dino created as a reward for that answer)
 Answers.hasOne(Dinos, { foreignKey: "answer_id" });
 Dinos.belongsTo(Answers, { foreignKey: "answer_id" });
 
+// =====================
+// EXPORT
+// =====================
 module.exports = {
   sequelize,
   models: { Players, Levels, Dinos, Questions, Answers },

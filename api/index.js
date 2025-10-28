@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 
-const { sequelize } = require("../models");
-const routes = require("../routes");
+const { sequelize } = require("./models");
+const routes = require("./routes");
 
 const app = express();
 
@@ -18,7 +18,10 @@ app.use("/api", routes);
 
 sequelize
   .authenticate()
-  .then(() => console.log("✅ Database connected (Vercel Serverless)"))
-  .catch((err) => console.error("❌ DB error:", err.message));
+  .then(() => console.log("✅ Database connected"))
+  .catch((err) => {
+    console.error("❌ DB error:");
+    console.error(err);
+  });
 
 module.exports = app;
